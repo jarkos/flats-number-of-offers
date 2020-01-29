@@ -9,6 +9,7 @@ public class FlatsOffersNumberInitializer {
 
     private static ResourceBundle rb = ResourceBundle.getBundle("app");
     private static WebsiteDataFetcher websiteDataFetcher = new WebsiteDataFetcher();
+    private static OfferHistoryRepository offerHistoryRepository = new OfferHistoryRepository();
     private static Set<String> bigCities = Set.of("warszawa", "krakow", "lodz", "poznan", "gdansk", "wroclaw", "szczecin",
             "katowice");
 
