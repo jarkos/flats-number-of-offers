@@ -24,7 +24,7 @@ public class FlatsOffersNumberInitializer {
             scheduler.scheduleAtFixedRate(new OfferFetcherTask(), 0, 12, TimeUnit.HOURS);
         }
         offerHistoryRepository.getAll();
-        log.warn("Finished apartments stats fetch for: " + LocalDate.now());
+        log.warn("Started at: " + LocalDate.now());
     }
 
 }
