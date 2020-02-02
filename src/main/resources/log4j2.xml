@@ -1,4 +1,8 @@
 <Configuration monitorInterval="60">
+    <Properties>
+        <Property name="logPath">target/offers-logs</Property>
+        <Property name="rollingFileName">offers</Property>
+    </Properties>
     <Appenders>
         <Console name="Console-Appender" target="SYSTEM_OUT">
             <PatternLayout>
@@ -7,17 +11,29 @@
                 </pattern>>
             </PatternLayout>
         </Console>
-        <File name="File-Appender" fileName="hibernate.log" bufferedIO="false" advertiseURI="file://hibernate.log"
-              advertise="true">
-        </File>
+<!--        <File name="File-Appender" fileName="hibernate.log" bufferedIO="false" advertiseURI="file://hibernate.log"-->
+<!--              advertise="true">-->
+<!--        </File>-->
+        <RollingFile name="rollingFile" fileName="${logPath}/${rollingFileName}.log" filePattern="${logPath}/${rollingFileName}_%d{yyyy-MM-dd}.log">
+        <PatternLayout pattern="[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}" />
+        <Policies>
+            <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+            <OnStartupTriggeringPolicy />
+            <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        </Policies>
+    </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="org.hibernate.SQL" level="debug" additivity="false">
-            <AppenderRef ref="File-Appender"/>
-        </Logger>
-        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">
-            <AppenderRef ref="File-Appender"/>
-        </Logger>
+        <logger name="org.hibernate">
+            <level value="info"/>
+        </logger>
+<!--        <Logger name="org.hibernate.SQL" level="debug" additivity="false">-->
+<!--            <AppenderRef ref="File-Appender"/>-->
+<!--        </Logger>-->
+<!--        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">-->
+<!--            <AppenderRef ref="File-Appender"/>-->
+<!--        </Logger>-->
         <Root level="info">
             <AppenderRef ref="Console-Appender"/>
         </Root>

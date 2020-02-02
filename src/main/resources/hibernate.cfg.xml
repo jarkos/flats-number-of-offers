@@ -16,7 +16,8 @@
         <!-- Sql dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.show_sql">false</property>
         <!-- Model class -->
-        <mapping class="OfferHistory"/>
+        <mapping class="pl.jarkos.OfferHistory"/>
     </session-factory>
 </hibernate-configuration>

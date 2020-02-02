@@ -1,3 +1,5 @@
+package pl.jarkos;
+
 import lombok.Data;
 
 import javax.persistence.*;
