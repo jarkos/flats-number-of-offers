@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class FlatsOffersNumberInitializer {
 
     private static ResourceBundle rb = ResourceBundle.getBundle("app");
-    private static OfferHistoryRepository offerHistoryRepository = new OfferHistoryRepository();
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public static void main(String[] args) {
@@ -23,7 +22,6 @@ public class FlatsOffersNumberInitializer {
         if (Boolean.valueOf(rb.getString("aggregation.data.enabled"))) {
             scheduler.scheduleAtFixedRate(new OfferFetcherTask(), 0, 12, TimeUnit.HOURS);
         }
-        offerHistoryRepository.getAll();
         log.warn("Started at: " + LocalDate.now());
     }
 

@@ -13,22 +13,19 @@ import java.util.List;
 @Repository
 class OfferHistoryRepository extends AbstractRepository {
 
-    List<? extends Object> getAll() {
+    List<?> getAll() {
         String hql = "FROM OfferHistory AS oh";
-
-        org.hibernate.Transaction tr = null;
         if (getSessionFactory().getCurrentSession().getTransaction() != null) {
-            tr = getSessionFactory().getCurrentSession().beginTransaction();
+            getSessionFactory().getCurrentSession().beginTransaction();
         }
-        Query<? extends Object> query = getSessionFactory().getCurrentSession().createQuery(hql);
+        Query<?> query = getSessionFactory().getCurrentSession().createQuery(hql);
         return query.list();
     }
 
     OfferHistory get(String city, LocalDate date) {
         String hql = "FROM OfferHistory AS oh WHERE oh.city = :city AND oh.date = :date";
-        org.hibernate.Transaction tr = null;
         if (getSessionFactory().getCurrentSession().getTransaction() != null) {
-            tr = getSessionFactory().getCurrentSession().beginTransaction();
+            getSessionFactory().getCurrentSession().beginTransaction();
         }
         Query query = getSessionFactory().getCurrentSession().createQuery(hql);
         query.setParameter("city", city);
@@ -38,11 +35,12 @@ class OfferHistoryRepository extends AbstractRepository {
 
     List<OfferHistory> getByCity(String city) {
         String hql = "FROM OfferHistory AS oh WHERE oh.city = :city ORDER BY oh.date";
-        org.hibernate.Transaction tr = null;
-        if (getSessionFactory().getCurrentSession().getTransaction() != null) {
-            tr = getSessionFactory().getCurrentSession().beginTransaction();
+        SessionFactory sf = getSessionFactory();
+        Session currentSession = sf.getCurrentSession();
+        if (!currentSession.getTransaction().isActive()) {
+            currentSession.beginTransaction();
         }
-        Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+        Query query = currentSession.createQuery(hql);
         query.setParameter("city", city);
         return (List<OfferHistory>) query.list();
     }
@@ -50,7 +48,7 @@ class OfferHistoryRepository extends AbstractRepository {
     void saveOrUpdate(OfferHistory oh) {
         SessionFactory sf = getSessionFactory();
         Session currentSession = sf.getCurrentSession();
-        org.hibernate.Transaction tr = null;
+        org.hibernate.Transaction tr;
         if (!currentSession.getTransaction().isActive()) {
             tr = currentSession.beginTransaction();
         } else {
