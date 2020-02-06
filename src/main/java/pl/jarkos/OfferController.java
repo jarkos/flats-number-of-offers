@@ -17,8 +17,8 @@ public class OfferController {
     @Autowired
     private
     OfferHistoryRepository offerHistoryRepository;
-    private static final List labeles = List.of("OlxSellFlatOfferNumber", "OtodomSellFlatOfferNumber",
-            "OlxRentFlatOfferNumber", "OtodomRentFlatOfferNumber", "OlxRoomOfferNumber", "OtodomRoomOfferNumber");
+    private static final List labeles = List.of("OlxSellFlats", "OtodomSellFlats","OlxRentFlats", "OtodomRentFlats",
+            "OlxRooms", "OtodomRooms");
 
     @RequestMapping("/stats")
     public String getAllOfferStatsByCity(@RequestParam(value = "size", required = false, defaultValue = "3") int requestedSizeList,
