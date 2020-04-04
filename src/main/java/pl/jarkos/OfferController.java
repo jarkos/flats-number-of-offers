@@ -21,7 +21,7 @@ public class OfferController {
             "OlxRooms", "OtodomRooms");
 
     @RequestMapping("/stats")
-    public String getAllOfferStatsByCity(@RequestParam(value = "size", required = false, defaultValue = "3") int requestedSizeList,
+    public String getAllOfferStatsByCity(@RequestParam(value = "size", required = false, defaultValue = "30") int requestedSizeList,
                                          @RequestParam(value = "city", required = false, defaultValue = "lodz") String city,
                                          Model model) {
 
@@ -38,8 +38,8 @@ public class OfferController {
             dataTableToPresent.add(values);
         });
 
-//        dataTableToPresent.subList(dataTableToPresent.size() - requestedSizeList, dataTableToPresent.size());
-        model.addAttribute("indicators", dataTableToPresent);
+        List<List<String>> limitedList = dataTableToPresent.subList(dataTableToPresent.size() - requestedSizeList, dataTableToPresent.size());
+        model.addAttribute("indicators", limitedList);
         model.addAttribute("labels", labeles);
         return "stats";
     }
