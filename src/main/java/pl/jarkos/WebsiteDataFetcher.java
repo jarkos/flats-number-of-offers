@@ -1,17 +1,19 @@
 package pl.jarkos;
 
 import lombok.extern.log4j.Log4j2;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Log4j2
 class WebsiteDataFetcher {
 
-    OfferHistoryRepository or = new OfferHistoryRepository();
+    private OfferHistoryRepository offerHistoryRepository = new OfferHistoryRepository();
 
     void getOlxFlatsOffersData(String url, String cityId) {
         try {
@@ -67,6 +69,10 @@ class WebsiteDataFetcher {
             log.info("Sell flat otodom " + cityId + sellOffers);
             updateOtodomFlatParams(cityId, sellOffers.replace(" ",""), rentOffers.replace(" ",""));
 
+        } catch (SocketTimeoutException | HttpStatusException ste) {
+            ste.printStackTrace();
+            log.info("Connection/timeout exception happened. Retry.");
+            getOtodomFlatsOffersData(url, cityId);
         } catch (IOException ioe) {
             log.info("IOException happened");
             ioe.printStackTrace();
@@ -98,26 +104,26 @@ class WebsiteDataFetcher {
         oh.setDate(LocalDate.now());
         oh.setOlxRentFlatOfferNumber(Integer.valueOf(rentOffers));
         oh.setOlxSellFlatOfferNumber(Integer.valueOf(sellOffers));
-        or.saveOrUpdate(oh);
+        offerHistoryRepository.saveOrUpdate(oh);
     }
 
     private void updateOtodomFlatParams(String cityId, String sellOffers, String rentOffers) {
-        OfferHistory oh = or.get(cityId, LocalDate.now());
+        OfferHistory oh = offerHistoryRepository.get(cityId, LocalDate.now());
         oh.setOtodomRentFlatOfferNumber(Integer.valueOf(rentOffers));
         oh.setOtodomSellFlatOfferNumber(Integer.valueOf(sellOffers));
-        or.saveOrUpdate(oh);
+        offerHistoryRepository.saveOrUpdate(oh);
     }
 
     private void updateOlxRoomParams(String cityId, AtomicInteger sumRoomOffers) {
-        OfferHistory oh = or.get(cityId, LocalDate.now());
+        OfferHistory oh = offerHistoryRepository.get(cityId, LocalDate.now());
         oh.setOlxRoomOfferNumber(Integer.valueOf(sumRoomOffers.toString()));
-        or.saveOrUpdate(oh);
+        offerHistoryRepository.saveOrUpdate(oh);
     }
 
     private void updateOtodomRoomParams(String cityId, String rentOffers) {
-        OfferHistory oh = or.get(cityId, LocalDate.now());
+        OfferHistory oh = offerHistoryRepository.get(cityId, LocalDate.now());
         oh.setOtodomRoomOfferNumber(Integer.valueOf(rentOffers));
-        or.saveOrUpdate(oh);
+        offerHistoryRepository.saveOrUpdate(oh);
     }
 
 }
