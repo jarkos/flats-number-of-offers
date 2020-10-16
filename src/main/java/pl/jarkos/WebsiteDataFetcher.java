@@ -40,7 +40,8 @@ class WebsiteDataFetcher {
                     .childNodes().stream().filter(node -> !node.toString().equals(" ")).forEach(node -> node.childNodes()
                     .stream().filter(subnode -> !subnode.toString().equals(" ")).forEach(subnode -> {
                         var resultOfDistrict = subnode.childNode(1).toString()
-                                .replace("&nbsp;(", "").replace(")", "");
+                                .replace("&nbsp;(", "").replace(")", "")
+                                .replace("&nbsp;", "");
                         sumRoomOffers.addAndGet(Integer.valueOf(resultOfDistrict));
                     }));
             log.info("ROOMS " + cityId + " " + sumRoomOffers);
